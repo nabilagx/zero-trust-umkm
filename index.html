@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero-Trust Dashboard - UMKM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .login-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #0f172a;
+    }
+    .login-card {
+      background-color: #1e293b;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-card h2 {
+      margin-bottom: 1.5rem;
+      color: #38bdf8;
+      text-align: center;
+    }
+    .login-card input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: #334155;
+      color: #f1f5f9;
+    }
+    .login-card button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #38bdf8;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      color: #1e293b;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .login-card button:hover {
+      background-color: #0ea5e9;
+    }
+    .login-card .hint {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      text-align: center;
+    }
+    .dashboard {
+      display: flex;
+      flex: 1;
+    }
+    .sidebar {
+      width: 240px;
+      background-color: #1e293b;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    .sidebar a {
+      color: #e2e8f0;
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      transition: background 0.3s ease;
+    }
+    .sidebar a.active,
+    .sidebar a:hover {
+      background-color: #334155;
+      color: #38bdf8;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 2rem;
+      background-color: #0f172a;
+    }
+    .card {
+      background-color: #1f2937;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 1px solid #334155;
+    }
+    th {
+      color: #38bdf8;
+    }
+    .alert {
+      background-color: #facc15;
+      color: #1f2937;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+      .sidebar {
+        flex-direction: row;
+        justify-content: space-around;
+        height: auto;
+        padding: 1rem;
+      }
+      .sidebar a {
+        flex-grow: 1;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-page" id="loginPage">
+    <div class="login-card">
+      <h2>Login Admin</h2>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Masuk</button>
+      <div class="hint">Gunakan username: <strong>admin</strong> dan password: <strong>zero123</strong></div>
+    </div>
+  </div>
+
+  <div class="dashboard" id="dashboard" style="display:none">
+    <div class="sidebar">
+      <a id="link-dashboard" onclick="showSection('dashboard')">Dashboard</a>
+      <a id="link-pengguna" onclick="showSection('pengguna')">Pengguna</a>
+      <a id="link-histori" onclick="showSection('histori')">Histori Login</a>
+      <a onclick="logout()">Logout</a>
+    </div>
+    <div class="content">
+      <div id="section-dashboard">
+  <h1 style="margin-bottom: 1rem; font-size: 2rem; font-weight: bold;">Selamat Datang, Admin</h1>
+  <div class="alert">Akses dari perangkat baru terdeteksi! Verifikasi diperlukan.</div>
+  <div class="card" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
+    <div style="flex: 1 1 200px; background-color: #0ea5e9; color: white; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+      <div style="font-size: 2rem; font-weight: bold;">3</div>
+      <div>Total Pengguna Aktif</div>
+    </div>
+    <div style="flex: 1 1 200px; background-color: #22c55e; color: white; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+      <div style="font-size: 2rem; font-weight: bold;">17:43</div>
+      <div>Login Terakhir</div>
+    </div>
+    <div style="flex: 1 1 200px; background-color: #f97316; color: white; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+      <div style="font-size: 2rem; font-weight: bold;">Aman</div>
+      <div>Status Sistem</div>
+    </div>
+  </div>
+</div>
+  <div class="card">
+    <h2>Statistik Hari Ini</h2>
+    <ul>
+      <li>Total Pengguna Aktif: <strong>3</strong></li>
+      <li>Login Terakhir: <strong>20 Juni 2025, 17:43 WIB</strong></li>
+      <li>Status Sistem: <strong style="color:limegreen">Aman</strong></li>
+    </ul>
+  </div>
+</div>
+      </div>
+      <div id="section-pengguna" style="display:none">
+  <div class="card">
+    <h2>Daftar Pengguna</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Role</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dina</td>
+          <td>Admin</td>
+          <td>dina@umkm.co.id</td>
+        </tr>
+        <tr>
+          <td>Bayu</td>
+          <td>Staf</td>
+          <td>bayu@umkm.co.id</td>
+        </tr>
+        <tr>
+          <td>Sari</td>
+          <td>Kasir</td>
+          <td>sari@umkm.co.id</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+      </div>
+      <div id="section-histori" style="display:none">
+  <div class="card">
+    <h2>Riwayat Login</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Pengguna</th>
+          <th>Perangkat</th>
+          <th>Waktu</th>
+          <th>Lokasi IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dina</td>
+          <td>Chrome - Windows</td>
+          <td>20 Juni 2025, 17:43</td>
+          <td>36.85.91.12 (Surabaya)</td>
+        </tr>
+        <tr>
+          <td>Bayu</td>
+          <td>Firefox - Android</td>
+          <td>20 Juni 2025, 08:20</td>
+          <td>114.124.93.55 (Bandung)</td>
+        </tr>
+        <tr>
+          <td>Sari</td>
+          <td>Safari - iOS</td>
+          <td>19 Juni 2025, 21:10</td>
+          <td>103.129.123.10 (Semarang)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      if (user === "admin" && pass === "zero123") {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'flex';
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        showSection('dashboard');
+      } else {
+        alert("Username atau password salah!");
+      }
+    }
+
+    function logout() {
+      alert("Logout berhasil.");
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('loginPage').style.display = 'flex';
+    }
+
+    function showSection(id) {
+      const sections = ['dashboard', 'pengguna', 'histori'];
+      const links = ['link-dashboard', 'link-pengguna', 'link-histori'];
+
+      sections.forEach(sec => {
+        document.getElementById(`section-${sec}`).style.display = (sec === id) ? 'block' : 'none';
+      });
+
+      links.forEach(link => {
+        document.getElementById(link).classList.remove('active');
+      });
+
+      document.getElementById(`link-${id}`).classList.add('active');
+    }
+  </script>
+</body>
+</html>
